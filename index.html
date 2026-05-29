@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>BiRAGAS · Edison Kosmos Competitive Analysis</title>
+<meta name="description" content="BiRAGAS Revenue Streams Master Presentation — 62 slides · five streams · one causal operating system · $618.8M by 2030.">
+
+<style>
+  html, body, #root { height: 100%; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: #0A0908;
+    color: #F5F0E8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: contain;
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0908; }
+  ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #333; }
+
+  #boot {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #0A0908; color: #F5F0E8; z-index: 0;
+  }
+  #boot .kicker { font-size: 10px; letter-spacing: 0.3em; color: #888; font-family: monospace; }
+  #boot .logo { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-top: 14px; text-align: center; max-width: 92vw; color: #F5F0E8; }
+  #boot .spin { margin-top: 30px; width: 22px; height: 22px; border: 2px solid #333; border-top-color: #C8A560; border-radius: 50%; animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Top bar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 56px;
+    background: rgba(10, 9, 8, 0.9);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid #1F1F1F;
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 14px;
+    z-index: 100;
+    padding-top: env(safe-area-inset-top, 0px);
+    height: calc(56px + env(safe-area-inset-top, 0px));
+  }
+  .hamburger { background: transparent; border: 1px solid #333; width: 40px; height: 40px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+  .hamburger:active { background: #1A1A1A; }
+  .tb-title { font-size: 13px; font-weight: 700; letter-spacing: -0.2px; color: #F5F0E8; min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tb-kicker { font-size: 9px; color: #888; font-family: monospace; letter-spacing: 0.2em; }
+  .chip { display: inline-flex; align-items: center; padding: 5px 10px; background: #161616; border: 1px solid #2A2A2A; font-family: monospace; font-size: 10px; color: #C8C4BC; border-radius: 3px; letter-spacing: 0.06em; flex-shrink: 0; }
+  .audio-btn { background: transparent; color: #C8C4BC; border: 1px solid #333; padding: 7px 12px; font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .audio-btn.on { background: var(--accent, #C8A560); color: #0A0908; border-color: var(--accent, #C8A560); }
+
+  /* Drawer */
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.22s ease; }
+  .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; left: 0; bottom: 0; width: min(86vw, 380px); background: #0F0F0F; z-index: 310; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; box-shadow: 0 0 60px rgba(0,0,0,0.8); }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head { padding: 16px 20px; border-bottom: 1px solid #1F1F1F; display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top, 16px)); }
+  .drawer-list { flex: 1; overflow-y: auto; padding: 6px 0; padding-bottom: max(20px, env(safe-area-inset-bottom, 20px)); }
+  .drawer-item { display: block; width: 100%; background: transparent; border: none; border-left: 3px solid transparent; padding: 12px 18px; text-align: left; cursor: pointer; font-family: inherit; transition: background 0.12s ease; }
+  .drawer-item:active { background: #1A1A1A; }
+  .drawer-stream-header { padding: 14px 18px 6px; font-size: 9px; letter-spacing: 0.3em; font-family: monospace; font-weight: 700; }
+
+  /* Slide container */
+  .slide {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: calc(80px + env(safe-area-inset-top, 0px)) 80px 140px;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+  }
+  .slide-kicker { font-size: 10px; letter-spacing: 0.3em; color: var(--accent, #C8A560); font-family: monospace; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; }
+  .slide-title { font-size: 38px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; margin: 0 0 14px; color: #F5F0E8; }
+  .slide-subtitle { font-size: 18px; color: #C8C4BC; line-height: 1.45; font-style: italic; margin-bottom: 24px; max-width: 920px; }
+  .slide-body { font-size: 15px; line-height: 1.65; color: #C8C4BC; max-width: 880px; margin-bottom: 24px; white-space: pre-wrap; }
+
+  /* Cover kind */
+  .slide.cover { justify-content: center; }
+  .slide.cover .slide-title { font-size: 64px; line-height: 1.05; margin-bottom: 18px; }
+  .slide.cover .slide-subtitle { font-size: 20px; max-width: 980px; }
+  .big-number { font-size: 96px; font-weight: 800; letter-spacing: -2px; color: var(--accent, #C8A560); margin: 30px 0 8px; line-height: 1; }
+  .big-label { font-size: 13px; font-family: monospace; color: #888; letter-spacing: 0.06em; max-width: 880px; line-height: 1.5; }
+
+  /* Manifesto kind */
+  .slide.manifesto { justify-content: center; }
+  .slide.manifesto .slide-title { font-size: 56px; line-height: 1.1; max-width: 1100px; }
+  .slide.manifesto .slide-subtitle { font-size: 22px; max-width: 980px; color: #E8E4DC; line-height: 1.5; }
+
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 22px 0; max-width: 1200px; }
+  .kpi { background: #0F0F0F; border: 1px solid #1F1F1F; border-top: 3px solid var(--accent, #C8A560); padding: 22px 18px; }
+  .kpi-k { font-size: 30px; font-weight: 700; color: #F5F0E8; letter-spacing: -0.6px; line-height: 1.1; }
+  .kpi-v { font-size: 11px; color: #888; margin-top: 8px; font-family: monospace; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1.4; }
+
+  /* Tables */
+  .tbl-wrap { margin: 22px 0; border: 1px solid #1F1F1F; background: #0F0F0F; max-width: 1300px; }
+  .tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl { border-collapse: collapse; width: 100%; min-width: 100%; }
+  .tbl th { background: #161616; padding: 14px 16px; text-align: left; font-size: 10px; letter-spacing: 0.18em; color: #888; text-transform: uppercase; font-family: monospace; font-weight: 700; border-bottom: 2px solid var(--accent, #C8A560); white-space: nowrap; }
+  .tbl td { padding: 12px 16px; font-size: 13px; color: #E8E4DC; border-bottom: 1px solid #1A1A1A; vertical-align: top; line-height: 1.45; }
+  .tbl td:first-child { color: var(--accent, #C8A560); font-weight: 700; white-space: nowrap; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl .total-row td { background: #161616; font-weight: 700; border-top: 2px solid var(--accent, #C8A560); }
+
+  /* Chart */
+  .chart-card { background: #0F0F0F; border: 1px solid #1F1F1F; padding: 26px; margin: 22px 0; max-width: 1100px; }
+  .chart-title { font-size: 11px; letter-spacing: 0.22em; color: #888; text-transform: uppercase; font-family: monospace; margin-bottom: 16px; font-weight: 700; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #C8C4BC; font-family: monospace; }
+  .legend-dot { width: 14px; height: 14px; display: inline-block; border-radius: 2px; flex-shrink: 0; }
+
+  /* Bullet list */
+  .bullet-list { list-style: none; padding: 0; margin: 22px 0; max-width: 1100px; }
+  .bullet-list li { padding: 14px 0 14px 36px; position: relative; font-size: 15px; line-height: 1.55; color: #E8E4DC; border-bottom: 1px solid #1A1A1A; }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-list li::before { content: "→"; position: absolute; left: 8px; top: 14px; color: var(--accent, #C8A560); font-weight: 700; font-size: 18px; }
+
+  /* Pill nav */
+  .pill-nav {
+    position: fixed; left: 14px; right: 14px;
+    bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+    display: flex; gap: 10px;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .pill-nav button {
+    pointer-events: auto; flex: 1;
+    height: 58px; border-radius: 29px;
+    border: 1px solid #2A2A2A;
+    background: rgba(15,15,15,0.96);
+    color: #F5F0E8;
+    font-family: monospace; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 16px 44px rgba(0,0,0,0.6);
+    transition: transform 0.12s ease;
+  }
+  .pill-nav button:active { transform: scale(0.97); }
+  .pill-nav button.next { background: var(--accent, #C8A560); color: #0A0908; border-color: var(--accent, #C8A560); }
+  .pill-nav button:disabled { opacity: 0.35; cursor: default; }
+
+  @media (min-width: 901px) {
+    .pill-nav { left: auto; right: 32px; width: 320px; }
+  }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 14px; gap: 10px; }
+    .tb-title { font-size: 12px; }
+    .tb-kicker { display: none; }
+    .slide { padding: calc(72px + env(safe-area-inset-top, 0px)) 18px 180px; }
+    .slide-title { font-size: 24px; }
+    .slide-subtitle { font-size: 14px; }
+    .slide-body { font-size: 14px; }
+    .slide.cover .slide-title { font-size: 36px; }
+    .slide.cover .slide-subtitle { font-size: 15px; }
+    .big-number { font-size: 56px; }
+    .slide.manifesto .slide-title { font-size: 30px; line-height: 1.15; }
+    .slide.manifesto .slide-subtitle { font-size: 15px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .kpi { padding: 14px 10px; }
+    .kpi-k { font-size: 20px; }
+    .kpi-v { font-size: 9px; margin-top: 5px; }
+    .chart-card { padding: 14px 12px; margin: 16px 0; }
+    .chart-title { font-size: 10px; margin-bottom: 10px; }
+    .legend-item { font-size: 10px; }
+    .tbl th { padding: 8px 10px; font-size: 9px; }
+    .tbl td { padding: 8px 10px; font-size: 11.5px; }
+    .bullet-list li { font-size: 13px; padding: 11px 0 11px 30px; }
+    .audio-btn { padding: 6px 10px; font-size: 9px; }
+    .audio-btn span:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="kicker">BIRAGAS · MMXXVI</div>
+  <div class="logo">EDISON KOSMOS · COMPETITIVE ANALYSIS</div>
+  <div class="spin"></div>
+</div>
+
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react,env">
+const { useState, useEffect, useRef } = React;
+const DATA = window.__DECK_DATA__;
+const slides = DATA.slides;
+
+const STREAM_NAMES = {
+  intro:    "Intro",
+  edison:   "Edison Scientific",
+  kosmos:   "Kosmos Platform",
+  compare:  "Head-to-Head",
+  threat:   "Threat Assessment",
+  close:    "Posture & Close",
+};
+const STREAM_COLORS = {
+  intro: "#C8A560", edison: "#7C3AED", kosmos: "#3B82F6",
+  compare: "#10B981", threat: "#EF4444", close: "#1E40AF",
+};
+
+// ─── CHART COMPONENTS ───
+function BarH({ data, title, unit }) {
+  const max = Math.max(...data.map(d => d.value)) * 1.05;
+  const W = 760, H = 38 * data.length + 30, leftPad = 230;
+  return (
+    <div className="chart-card">
+      {title && <div className="chart-title">{title}</div>}
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMinYMin meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {data.map((d, i) => {
+          const y = i * 38 + 12;
+          const barW = Math.max(2, (d.value / max) * (W - leftPad - 30));
+          const val = typeof d.value === "number" ? (d.value < 10 ? +d.value.toFixed(2) : d.value.toLocaleString()) : d.value;
+          return (
+            <g key={i}>
+              <text x={leftPad - 14} y={y + 19} textAnchor="end" fill="#C8C4BC" fontSize="12" fontWeight="500">{d.label}</text>
+              <rect x={leftPad} y={y + 4} width={barW} height={24} fill={d.color || "#3B82F6"} rx="2" />
+              <text x={leftPad + barW + 8} y={y + 21} fill="#F5F0E8" fontSize="12" fontFamily="monospace" fontWeight="700">{val}{unit ? unit : ""}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function BarV({ data, title, unit }) {
+  const max = Math.max(...data.map(d => d.value)) * 1.15;
+  const W = 720, H = 320, padBottom = 50, padTop = 30, padX = 40;
+  const barW = (W - padX * 2) / data.length;
+  return (
+    <div className="chart-card">
+      {title && <div className="chart-title">{title}</div>}
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMinYMin meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {data.map((d, i) => {
+          const h = ((d.value / max) * (H - padTop - padBottom));
+          const x = padX + i * barW + barW * 0.15;
+          const w = barW * 0.7;
+          const y = H - padBottom - h;
+          return (
+            <g key={i}>
+              <rect x={x} y={y} width={w} height={h} fill={d.color || "#3B82F6"} rx="2" />
+              <text x={x + w / 2} y={y - 8} textAnchor="middle" fill="#F5F0E8" fontSize="12" fontFamily="monospace" fontWeight="700">{d.value}{unit ? unit : ""}</text>
+              <text x={x + w / 2} y={H - padBottom + 20} textAnchor="middle" fill="#C8C4BC" fontSize="11" fontFamily="-apple-system,sans-serif" fontWeight="600">{d.label}</text>
+            </g>
+          );
+        })}
+        <line x1={padX} y1={H - padBottom} x2={W - padX} y2={H - padBottom} stroke="#333" strokeWidth="1" />
+      </svg>
+    </div>
+  );
+}
+
+function BarVGrouped({ x, series, title }) {
+  const all = series.flatMap(s => s.data);
+  const max = Math.max(...all) * 1.18;
+  const W = 760, H = 360, padBottom = 60, padTop = 20, padX = 40;
+  const groupW = (W - padX * 2) / x.length;
+  const barW = groupW * 0.85 / series.length;
+  return (
+    <div className="chart-card">
+      {title && <div className="chart-title">{title}</div>}
+      <div className="legend">
+        {series.map((s, i) => <div key={i} className="legend-item"><span className="legend-dot" style={{ background: s.color }}></span>{s.label}</div>)}
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMinYMin meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {x.map((xLabel, gi) => {
+          const gx = padX + gi * groupW + groupW * 0.075;
+          return (
+            <g key={gi}>
+              {series.map((s, si) => {
+                const v = s.data[gi] || 0;
+                const h = (v / max) * (H - padTop - padBottom);
+                const bx = gx + si * barW;
+                const by = H - padBottom - h;
+                return <rect key={si} x={bx} y={by} width={barW - 2} height={h} fill={s.color} rx="1" />;
+              })}
+              <text x={gx + groupW * 0.42} y={H - padBottom + 22} textAnchor="middle" fill="#C8C4BC" fontSize="11" fontFamily="monospace" fontWeight="600">{xLabel}</text>
+            </g>
+          );
+        })}
+        <line x1={padX} y1={H - padBottom} x2={W - padX} y2={H - padBottom} stroke="#333" strokeWidth="1" />
+      </svg>
+    </div>
+  );
+}
+
+function LineChart({ x, series, title }) {
+  const all = series.flatMap(s => s.data);
+  const max = Math.max(...all) * 1.15;
+  const W = 760, H = 360, padBottom = 50, padTop = 30, padX = 50;
+  const innerW = W - padX * 2, innerH = H - padTop - padBottom;
+  const stepX = innerW / Math.max(1, x.length - 1);
+  return (
+    <div className="chart-card">
+      {title && <div className="chart-title">{title}</div>}
+      <div className="legend">
+        {series.map((s, i) => <div key={i} className="legend-item"><span className="legend-dot" style={{ background: s.color, width: 18, height: 3, borderRadius: 1 }}></span>{s.label}</div>)}
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMinYMin meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {[0, 0.25, 0.5, 0.75, 1].map((t, i) => {
+          const y = padTop + innerH * t;
+          return (
+            <g key={i}>
+              <line x1={padX} y1={y} x2={W - padX} y2={y} stroke="#1F1F1F" strokeWidth="1" />
+              <text x={padX - 8} y={y + 4} textAnchor="end" fill="#666" fontSize="10" fontFamily="monospace">{Math.round(max * (1 - t))}</text>
+            </g>
+          );
+        })}
+        {x.map((xLabel, i) => (
+          <text key={i} x={padX + i * stepX} y={H - padBottom + 20} textAnchor="middle" fill="#C8C4BC" fontSize="11" fontFamily="monospace" fontWeight="600">{xLabel}</text>
+        ))}
+        {series.map((s, si) => {
+          const points = s.data.map((v, i) => [padX + i * stepX, padTop + innerH * (1 - v / max)]);
+          const path = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]} ${p[1]}`).join(" ");
+          const last = points[points.length - 1];
+          return (
+            <g key={si}>
+              <path d={path} stroke={s.color} strokeWidth="2.5" fill="none" />
+              {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="4" fill={s.color} stroke="#0A0908" strokeWidth="2" />)}
+              <text x={last[0] + 8} y={last[1] + 4} fill={s.color} fontSize="11" fontFamily="monospace" fontWeight="700">{s.data[s.data.length - 1]}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function renderChart(chart) {
+  if (!chart) return null;
+  if (chart.type === "bar-h") return <BarH data={chart.data} title={chart.title} unit={chart.unit} />;
+  if (chart.type === "bar-v") return <BarV data={chart.data} title={chart.title} unit={chart.unit} />;
+  if (chart.type === "bar-v-grouped") return <BarVGrouped x={chart.x} series={chart.series} title={chart.title} />;
+  if (chart.type === "line") return <LineChart x={chart.x} series={chart.series} title={chart.title} />;
+  return null;
+}
+
+// ─── APP ───
+function App() {
+  const [idx, setIdx] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [audioOn, setAudioOn] = useState(false);
+  const touchRef = useRef(null);
+  const audioRef = useRef(null);
+  const slideRef = useRef(null);
+
+  const cur = slides[idx];
+  const accent = cur.color;
+
+  useEffect(() => { document.body.style.overflow = drawerOpen ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [drawerOpen]);
+  useEffect(() => { const b = document.getElementById("boot"); if (b) b.style.display = "none"; }, []);
+  useEffect(() => { if (slideRef.current) slideRef.current.scrollTop = 0; window.scrollTo(0, 0); }, [idx]);
+
+  // Audio sync
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.pause();
+    if (!audioOn) return;
+    a.src = `audio/${cur.id}.mp3`;
+    a.load();
+    const p = a.play();
+    if (p) p.catch(() => {});
+  }, [idx, audioOn]);
+
+  // Keyboard
+  useEffect(() => {
+    const h = (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); setIdx(i => Math.min(slides.length - 1, i + 1)); }
+      else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); setIdx(i => Math.max(0, i - 1)); }
+      else if (e.key.toLowerCase() === "m") setAudioOn(v => !v);
+      else if (e.key.toLowerCase() === "n") setDrawerOpen(v => !v);
+      else if (e.key === "Escape") setDrawerOpen(false);
+      else if (e.key === "Home") setIdx(0);
+      else if (e.key === "End") setIdx(slides.length - 1);
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
+
+  const onTouchStart = (e) => { touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() }; };
+  const onTouchEnd = (e) => {
+    const s = touchRef.current; if (!s) return;
+    const dx = e.changedTouches[0].clientX - s.x;
+    const dy = e.changedTouches[0].clientY - s.y;
+    const dt = Date.now() - s.t;
+    touchRef.current = null;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && dt < 700) {
+      if (dx < 0) setIdx(i => Math.min(slides.length - 1, i + 1));
+      else setIdx(i => Math.max(0, i - 1));
+    }
+  };
+
+  // Group slides by stream for drawer
+  const groups = [];
+  let lastStream = null;
+  slides.forEach((s, i) => {
+    if (s.stream !== lastStream) {
+      groups.push({ stream: s.stream, name: STREAM_NAMES[s.stream], color: STREAM_COLORS[s.stream], slides: [] });
+      lastStream = s.stream;
+    }
+    groups[groups.length - 1].slides.push({ idx: i, slide: s });
+  });
+
+  // Render slide content
+  const renderSlide = () => {
+    return (
+      <div className={`slide ${cur.kind}`} ref={slideRef} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{ touchAction: "pan-y" }}>
+        {cur.kicker && <div className="slide-kicker">{cur.kicker}</div>}
+        {cur.title && <h1 className="slide-title">{cur.title}</h1>}
+        {cur.subtitle && <div className="slide-subtitle">{cur.subtitle}</div>}
+        {cur.body && <div className="slide-body">{cur.body}</div>}
+
+        {cur.kind === "cover" && cur.big_number && (
+          <div>
+            <div className="big-number">{cur.big_number}</div>
+            {cur.big_label && <div className="big-label">{cur.big_label}</div>}
+          </div>
+        )}
+
+        {cur.kpis && cur.kpis.length > 0 && (
+          <div className="kpi-grid">
+            {cur.kpis.map((k, i) => (
+              <div key={i} className="kpi">
+                <div className="kpi-k">{k.k}</div>
+                <div className="kpi-v">{k.v}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {cur.chart && renderChart(cur.chart)}
+
+        {cur.table && (
+          <div className="tbl-wrap">
+            <div className="tbl-scroll">
+              <table className="tbl">
+                {cur.table.title && (
+                  <caption style={{ fontSize: 11, letterSpacing: "0.2em", color: "#888", textTransform: "uppercase", fontFamily: "monospace", padding: "12px 16px", textAlign: "left", fontWeight: 700 }}>
+                    {cur.table.title}
+                  </caption>
+                )}
+                <thead>
+                  <tr>{cur.table.headers.map((h, i) => <th key={i}>{h}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {cur.table.rows.map((row, ri) => {
+                    const isTotal = String(row[0]).toUpperCase().includes("TOTAL");
+                    return (
+                      <tr key={ri} className={isTotal ? "total-row" : ""}>
+                        {row.map((cell, ci) => (
+                          <td key={ci}>{typeof cell === "number" ? cell.toLocaleString() : cell}</td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {cur.bullets && cur.bullets.length > 0 && (
+          <ul className="bullet-list">
+            {cur.bullets.map((b, i) => <li key={i}>{b}</li>)}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ "--accent": accent, minHeight: "100vh", background: "#0A0908" }}>
+      {/* TOP BAR */}
+      <div className="topbar">
+        <button className="hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="4" width="16" height="2" fill="#F5F0E8" rx="1"/>
+            <rect x="2" y="9" width="16" height="2" fill="#F5F0E8" rx="1"/>
+            <rect x="2" y="14" width="16" height="2" fill="#F5F0E8" rx="1"/>
+          </svg>
+        </button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="tb-kicker">{STREAM_NAMES[cur.stream]} · {DATA.title}</div>
+          <div className="tb-title">{cur.title || cur.kicker}</div>
+        </div>
+        <button className={`audio-btn ${audioOn ? "on" : ""}`} onClick={() => setAudioOn(v => !v)} aria-label={audioOn ? "Mute" : "Play"}>
+          <span style={{ fontSize: 14 }}>{audioOn ? "🔊" : "🔇"}</span>
+          <span>{audioOn ? "ON" : "OFF"}</span>
+        </button>
+        <span className="chip">{String(idx + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</span>
+      </div>
+
+      {/* DRAWER */}
+      <div className={`drawer-overlay ${drawerOpen ? "open" : ""}`} onClick={() => setDrawerOpen(false)} />
+      <div className={`drawer ${drawerOpen ? "open" : ""}`}>
+        <div className="drawer-head">
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", fontFamily: "monospace", marginBottom: 4 }}>NAVIGATION</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "#F5F0E8" }}>{slides.length} slides</div>
+          </div>
+          <button onClick={() => setDrawerOpen(false)} aria-label="Close" style={{ background: "transparent", border: "1px solid #333", color: "#F5F0E8", width: 36, height: 36, borderRadius: 4, cursor: "pointer", fontSize: 22, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+        </div>
+        <div className="drawer-list">
+          {groups.map((g, gi) => (
+            <div key={gi}>
+              <div className="drawer-stream-header" style={{ color: g.color }}>
+                {g.name.toUpperCase()}
+              </div>
+              {g.slides.map(({ idx: si, slide }) => {
+                const active = si === idx;
+                return (
+                  <button key={si} className="drawer-item" onClick={() => { setIdx(si); setDrawerOpen(false); }} style={{ background: active ? "#1A1A1A" : "transparent", borderLeftColor: active ? slide.color : "transparent" }}>
+                    <div style={{ fontSize: 9, fontFamily: "monospace", color: active ? slide.color : "#666", letterSpacing: "0.1em", marginBottom: 3, fontWeight: 700 }}>
+                      {String(si + 1).padStart(2, "0")} · {slide.kind.toUpperCase()}
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: active ? "#F5F0E8" : "#C8C4BC", letterSpacing: "-0.2px", lineHeight: 1.3 }}>{slide.title || slide.kicker}</div>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {renderSlide()}
+
+      <audio ref={audioRef} preload="auto" />
+
+      {/* PILL NAV */}
+      <div className="pill-nav">
+        <button onClick={() => setIdx(i => Math.max(0, i - 1))} disabled={idx === 0}>← Prev</button>
+        <button className="next" onClick={() => setIdx(i => Math.min(slides.length - 1, i + 1))} disabled={idx === slides.length - 1}>Next →</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+<script id="deck-data" type="application/json">{
+  "title": "Edison Scientific & Kosmos \u00b7 vs BiRAGAS",
+  "subtitle": "Strategic competitive analysis \u00b7 MMXXVI",
+  "slides": [
+    {
+      "id": "k01_cover",
+      "stream": "intro",
+      "color": "#C8A560",
+      "kind": "cover",
+      "kicker": "AYASS BIOSCIENCE \u00b7 STRATEGIC ANALYSIS \u00b7 MMXXVI",
+      "title": "Edison Scientific & Kosmos",
+      "subtitle": "A Deep-Dive Competitive Analysis \u00b7 Side-by-Side with BiRAGAS",
+      "big_number": "$70M",
+      "big_label": "Edison seed \u00b7 Dec 18 2025 \u00b7 ~$250M post-money \u00b7 Spark + Triatomic co-leads \u00b7 Incyte anchor May 2026",
+      "narration": "Welcome to the Edison Scientific and Kosmos strategic analysis. The most credible direct adjacency to BiRAGAS in the AI-pharma R&D infrastructure space. Edison raised seventy million in seed funding in December 2025, deployed Kosmos at Incyte in May 2026, and is positioned as the for-profit commercial arm of FutureHouse. This deck assesses the threat, the partnership potential, and the strategic posture BiRAGAS should adopt."
+    },
+    {
+      "id": "k02_thesis",
+      "stream": "intro",
+      "color": "#C8A560",
+      "kind": "manifesto",
+      "kicker": "THE THESIS",
+      "title": "Edison is the most credible adjacency BiRAGAS has faced.",
+      "subtitle": "Not a clone. Not a competitor in the strict sense. An orchestration-layer peer that occupies the enterprise-pharma R&D copilot motion BiRAGAS does not need to win head-to-head \u2014 if BiRAGAS anchors on the causal-infrastructure wedge Edison has not built.",
+      "narration": "The thesis. Edison Scientific is the most credible direct adjacency BiRAGAS has faced. They are not a clone, not a strict competitor. They are an orchestration-layer peer that occupies the enterprise pharma R&D copilot motion \u2014 a motion BiRAGAS does not need to win head-to-head, provided BiRAGAS anchors on the causal infrastructure wedge that Edison has not built."
+    },
+    {
+      "id": "k03_edison_profile",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "stat-grid",
+      "kicker": "EDISON SCIENTIFIC \u00b7 COMPANY PROFILE",
+      "title": "For-profit spinout of FutureHouse \u00b7 November 2025",
+      "body": "Headquartered in San Francisco. Sam Rodriques (CEO, ex-MIT PhD, ran a Francis Crick Institute lab) and Andrew White (CTO, computational chemist at U Rochester, built ChemCrow in 2022) are the co-founders.",
+      "kpis": [
+        {
+          "k": "Nov 2025",
+          "v": "Edison spinout date"
+        },
+        {
+          "k": "$70M",
+          "v": "Seed round \u00b7 Dec 18 2025"
+        },
+        {
+          "k": "~$250M",
+          "v": "Post-money valuation"
+        },
+        {
+          "k": "San Francisco",
+          "v": "Headquarters"
+        }
+      ],
+      "narration": "Edison Scientific. Founded as the for-profit commercial spinout of FutureHouse in November 2025. Headquartered in San Francisco. Sam Rodriques, CEO and co-founder, holds an MIT PhD from 2019 and previously ran a laboratory at the Francis Crick Institute. Andrew White, CTO and co-founder, is a computational chemist at the University of Rochester who built ChemCrow in 2022 \u2014 one of the first large language agents for science. Together they founded FutureHouse in November 2023 with backing from Eric and Wendy Schmidt."
+    },
+    {
+      "id": "k04_edison_funding",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "chart",
+      "kicker": "EDISON \u00b7 FUNDING CONTEXT",
+      "title": "$70M Seed \u00b7 December 18, 2025",
+      "body": "Co-leads Spark Capital and Triatomic Capital plus a major US institutional biotech investor. Notable angels include Jeff Dean (Google Chief Scientist) and Dmitri Alperovitch (CrowdStrike co-founder). Pillar VC and Susa Ventures are existing investors continuing in.",
+      "chart": {
+        "type": "bar-h",
+        "title": "Edison Investor Stack \u00b7 $70M Seed",
+        "data": [
+          {
+            "label": "Spark Capital (co-lead)",
+            "value": 70,
+            "color": "#7C3AED"
+          },
+          {
+            "label": "Triatomic Capital (co-lead)",
+            "value": 70,
+            "color": "#8B5CF6"
+          },
+          {
+            "label": "US biotech inst. (co-lead)",
+            "value": 70,
+            "color": "#A78BFA"
+          },
+          {
+            "label": "Pillar VC (existing)",
+            "value": 40,
+            "color": "#C4B5FD"
+          },
+          {
+            "label": "Susa Ventures (existing)",
+            "value": 40,
+            "color": "#DDD6FE"
+          },
+          {
+            "label": "Striker / Hawktail / Olive",
+            "value": 30,
+            "color": "#E9D5FF"
+          },
+          {
+            "label": "Angels (Dean, Alperovitch)",
+            "value": 20,
+            "color": "#C8A560"
+          }
+        ],
+        "unit": ""
+      },
+      "narration": "Funding context. Seventy million dollar seed announced December 18 2025. Co-led by Spark Capital, Triatomic Capital, and a major US institutional biotech investor whose name has not been publicly disclosed. Pillar VC and Susa Ventures continued from earlier rounds. Striker, Hawktail, and Olive joined as participating investors. Notable angels: Jeff Dean, the Google Chief Scientist, and Dmitri Alperovitch, the CrowdStrike co-founder. This is brand-name VC capital with strong talent magnetism."
+    },
+    {
+      "id": "k05_kosmos_what",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "manifesto",
+      "kicker": "KOSMOS \u00b7 WHAT IT IS",
+      "title": "An autonomous AI scientist.",
+      "subtitle": "Runs long, multi-cycle research campaigns on a single scientific question. Claims six months of human research in a single day. Hypothesis to registration in days, not months.",
+      "narration": "Kosmos. Edison's flagship product. An autonomous AI scientist that runs long, multi-cycle research campaigns on a single scientific question. The claim \u2014 six months of human research in a single day. The framing \u2014 from hypothesis to registration in days, not months. Positioned as institutional R&D infrastructure that participates directly in scientific decision-making, not as a point-solution copilot."
+    },
+    {
+      "id": "k06_kosmos_arch",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "stat-grid",
+      "kicker": "KOSMOS \u00b7 ARCHITECTURE",
+      "title": "Multi-agent system on structured world models",
+      "body": "Persistent synchronous interface on top of native asynchronous agent architecture. Model-agnostic \u2014 can be trained directly with reinforcement learning and supervised fine-tuning. Custom world models per client. On-premises deployment, SOC2 Type II compliance.",
+      "kpis": [
+        {
+          "k": "1,500",
+          "v": "papers processed per run"
+        },
+        {
+          "k": "42,000",
+          "v": "lines of analysis code per run"
+        },
+        {
+          "k": "Model-agnostic",
+          "v": "LLM-provider swappable"
+        },
+        {
+          "k": "SOC2 Type II",
+          "v": "on-prem deployment"
+        }
+      ],
+      "narration": "Architecture. Multi-agent system built on top of structured world models that maintain coherence across very large information contexts. A single Kosmos run reportedly processes fifteen hundred papers and forty-two thousand lines of analysis code. A persistent synchronous interface \u2014 Slack, Teams, email \u2014 sits on top of a native asynchronous agent architecture. Model-agnostic \u2014 providers are swappable as state of the art evolves, and the system can be trained directly via reinforcement learning and supervised fine-tuning. Each client gets a custom world model. Deployment is on-premises with SOC2 Type II."
+    },
+    {
+      "id": "k07_kosmos_agents",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "table",
+      "kicker": "KOSMOS \u00b7 NAMED AGENTS",
+      "title": "8 publicly named agents \u00b7 all FutureHouse-inherited",
+      "body": "The agent stack is directly traceable to FutureHouse's prior open research. Crow / Finch / Owl have been renamed for the commercial product but the underlying lineage is public.",
+      "table": {
+        "title": "Kosmos Agent Surface",
+        "headers": [
+          "Agent / Workflow",
+          "Heritage / Notes"
+        ],
+        "rows": [
+          [
+            "Literature agent",
+            "Formerly Crow / PaperQA from FutureHouse"
+          ],
+          [
+            "Analysis agent",
+            "Formerly Finch from FutureHouse"
+          ],
+          [
+            "Precedent agent",
+            "Formerly HasAnyone / Owl"
+          ],
+          [
+            "Hypothesis generation",
+            "Robin (May 2025 FutureHouse) is direct predecessor"
+          ],
+          [
+            "Experimental design",
+            "Native to Kosmos"
+          ],
+          [
+            "Compute provisioning",
+            "AlphaFold + molecular docking GPU orchestration"
+          ],
+          [
+            "PDF authoring",
+            "Figure interpretation from papers"
+          ],
+          [
+            "Synchronous chat",
+            "Slack / Teams / email surfaces"
+          ]
+        ]
+      },
+      "narration": "Eight publicly named agents. Literature agent \u2014 formerly Crow and PaperQA from FutureHouse. Analysis agent \u2014 formerly Finch. Precedent agent \u2014 formerly HasAnyone and Owl. Hypothesis generation \u2014 direct descendant of Robin, the May 2025 FutureHouse agent that produced Nature-published discoveries. Experimental design native to Kosmos. Compute provisioning that auto-spins AlphaFold and molecular docking on GPUs. PDF authoring with figure interpretation. And a synchronous chat layer that surfaces through Slack, Teams, and email."
+    },
+    {
+      "id": "k08_kosmos_tasks",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "list",
+      "kicker": "KOSMOS \u00b7 SCIENTIFIC TASKS",
+      "title": "Claimed end-to-end coverage from target discovery through clinical development",
+      "bullets": [
+        "Target discovery and target validation",
+        "Translational biology",
+        "Hypothesis generation and evaluation",
+        "Synthesis of experimental, clinical, biomarker data",
+        "Reproduction of clinical-development stages (validated via novel checkpoint inhibitor lead-ID through Phase II PoC)",
+        "Toxicology + clinical-trial + regulatory documentation integration",
+        "AlphaFold runs and molecular docking",
+        "PDF authoring and figure interpretation"
+      ],
+      "narration": "Kosmos's claimed task surface spans the full R&D lifecycle. Target discovery and validation. Translational biology. Hypothesis generation and evaluation. Synthesis of experimental, clinical, and biomarker data. Most importantly, reproduction of clinical-development stages \u2014 validated by Edison through a documented run that reproduced a novel checkpoint inhibitor from lead identification through Phase Two proof-of-concept. Toxicology, clinical trials, regulatory documentation integration. AlphaFold and molecular docking. PDF authoring and figure interpretation."
+    },
+    {
+      "id": "k09_kosmos_verification",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "manifesto",
+      "kicker": "KOSMOS \u00b7 VERIFICATION GAP",
+      "title": "No published hallucination shield. No causal-confidence scoring.",
+      "subtitle": "Public materials describe 'enterprise-grade security, traceability, fully auditable workflows' and 'structured world models' as the coherence mechanism. This is auditability, not causal validation. This is the gap that defines BiRAGAS's wedge.",
+      "narration": "Kosmos's verification approach. Public materials describe enterprise-grade security, traceability, and fully auditable workflows. The structured world models maintain coherence across contexts. This is auditability \u2014 but it is not causal validation. There is no published causal-confidence metric, no outcome-truthfulness scoring, no equivalent to BiRAGAS's Causal Confidence Score or PSI. This is the gap that defines BiRAGAS's structural wedge."
+    },
+    {
+      "id": "k10_github",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "stat-grid",
+      "kicker": "GITHUB \u00b7 COMMUNITY REIMPLEMENTATION",
+      "title": "jimmc414/Kosmos \u2014 NOT Edison's source",
+      "body": "Third-party Python reimplementation of the published Kosmos paper (arXiv 2511.02824). Most informative public window into the architecture, but not the production code. 526 stars \u00b7 95 forks \u00b7 MIT-licensed \u00b7 alpha. Useful for inferring Edison's likely agent stack and dependency tree.",
+      "kpis": [
+        {
+          "k": "526",
+          "v": "GitHub stars"
+        },
+        {
+          "k": "v0.2.0-alpha",
+          "v": "Status: alpha"
+        },
+        {
+          "k": "Python 90.1%",
+          "v": "with TeX paper directory"
+        },
+        {
+          "k": "NOT official",
+          "v": "third-party community work"
+        }
+      ],
+      "narration": "The GitHub repository. There is a community Python reimplementation at jimmc414 slash Kosmos. Important caveat \u2014 it is NOT Edison's production source. It is a third-party implementation of the published Kosmos paper, arXiv 2511.02824. Five hundred twenty-six stars, ninety-five forks, MIT-licensed, version 0.2.0-alpha. While unofficial, it is the most informative public window into Kosmos's likely architecture \u2014 and the agent module names match Edison's public agent naming exactly."
+    },
+    {
+      "id": "k11_github_stack",
+      "stream": "kosmos",
+      "color": "#3B82F6",
+      "kind": "list",
+      "kicker": "GITHUB REPO \u00b7 TECHNICAL STACK",
+      "title": "What the community implementation reveals about Kosmos's likely architecture",
+      "bullets": [
+        "Hand-rolled orchestration \u2014 NO LangGraph and NO LangChain in declared deps",
+        "Anthropic + OpenAI + LiteLLM (100+ providers including local Ollama)",
+        "ChromaDB vector store + Neo4j knowledge graph (via py2neo)",
+        "Docker-sandboxed code execution with --cap-drop=ALL --network=none",
+        "Hierarchical 3-tier ~20:1 context compression",
+        "Biology stack: pykegg, mygene, pyensembl, gseapy, pydeseq2 (matches BiRAGAS bioinformatics)",
+        "Materials stack: pymatgen, ase, mp-api, xgboost",
+        "8-dimension ScholarEval discovery validation framework"
+      ],
+      "narration": "The technical stack reveals key choices. Crucially \u2014 no LangGraph and no LangChain in declared dependencies. The orchestration is hand-rolled, suggesting Edison values control over its agent graph rather than commodity infrastructure. Anthropic, OpenAI, and LiteLLM cover the LLM provider layer. ChromaDB and Neo4j for vector store and knowledge graph. Docker-sandboxed code execution with strict container isolation. Hierarchical 3-tier context compression at twenty-to-one ratio. The biology dependency stack \u2014 pyDESeq2, gseapy, pykegg, mygene \u2014 overlaps significantly with BiRAGAS's own bioinformatics surface. And an 8-dimension ScholarEval framework validates discovery outputs."
+    },
+    {
+      "id": "k12_incyte",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "manifesto",
+      "kicker": "INCYTE \u00b7 MARQUEE REFERENCE DEAL",
+      "title": "May 19, 2026 \u00b7 Embedded across discovery \u2192 development",
+      "subtitle": "NASDAQ:INCY \u00b7 ~$15B market cap \u00b7 Patrick Mayes (EVP & CSO): 'By using systems that learn from our experimental and clinical data, we can enhance result interpretation.'",
+      "narration": "The Incyte deal. Announced May 19 2026. Incyte Corporation, NASDAQ ticker INCY, approximately fifteen billion dollar market cap. Strategic collaboration to embed Kosmos across Incyte's discovery and development lifecycle. Initial focus on target discovery, target validation, and translational biology. Expected to expand across Incyte's broader R&D organization. Patrick Mayes, Incyte's EVP and Chief Scientific Officer, on record: by using systems that learn from our experimental and clinical data, we can enhance result interpretation."
+    },
+    {
+      "id": "k13_incyte_terms",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "stat-grid",
+      "kicker": "INCYTE \u00b7 DEAL TERMS",
+      "title": "Dollar amount NOT publicly disclosed",
+      "body": "No upfront, milestones, royalties, equity, or duration disclosed. Validation reference: Kosmos reproduced clinical-development stages of a novel checkpoint inhibitor from lead identification through Phase II proof-of-concept.",
+      "kpis": [
+        {
+          "k": "Not disclosed",
+          "v": "Dollar amount"
+        },
+        {
+          "k": "Discovery \u2192 Dev",
+          "v": "Deployment scope"
+        },
+        {
+          "k": "Checkpoint inhibitor",
+          "v": "Validation reference"
+        },
+        {
+          "k": "Lead-ID \u2192 Phase II",
+          "v": "Stages reproduced"
+        }
+      ],
+      "narration": "Deal terms. No dollar amount has been publicly disclosed. No upfront, no milestones, no royalties, no equity stake, no duration. The public validation reference is significant \u2014 Kosmos was validated by reproducing the clinical-development stages of a novel checkpoint inhibitor, from lead identification through Phase II proof of concept. That validation, paired with the Incyte deployment, gives Edison a credibility anchor in pharma R&D that BiRAGAS has not yet matched."
+    },
+    {
+      "id": "k14_lineage",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "table",
+      "kicker": "FUTUREHOUSE \u2192 EDISON \u00b7 AGENT LINEAGE",
+      "title": "Three years of agent research culminating in Kosmos",
+      "body": "The lineage matters. PaperQA put high-fidelity citations on the map. Robin produced Nature-published validated discoveries. Kosmos commercializes the stack. Eric and Wendy Schmidt funded the first two years of FutureHouse.",
+      "table": {
+        "title": "Agent Evolution Timeline",
+        "headers": [
+          "Year",
+          "Agent",
+          "Notes"
+        ],
+        "rows": [
+          [
+            "2022",
+            "ChemCrow",
+            "Andrew White's first large language agent for science"
+          ],
+          [
+            "2023",
+            "PaperQA",
+            "High-fidelity literature citations"
+          ],
+          [
+            "2024",
+            "Aviary",
+            "Agent framework"
+          ],
+          [
+            "2024\u201325",
+            "Crow / Finch / Owl / HasAnyone",
+            "Specialized lit / analysis / precedent agents"
+          ],
+          [
+            "May 2025",
+            "Robin",
+            "Nature-published validated discoveries"
+          ],
+          [
+            "Nov 2025",
+            "Kosmos",
+            "Edison's commercial product"
+          ]
+        ]
+      },
+      "narration": "FutureHouse to Edison lineage. Three years of agent research culminating in Kosmos. Andrew White built ChemCrow in 2022 \u2014 one of the first large language agents for chemistry. 2023 brought PaperQA, which established high-fidelity literature citation as a feasible AI capability. 2024 saw Aviary as a framework and Crow Finch Owl HasAnyone as specialized agents. May 2025, Robin produced Nature-published validated scientific discoveries. November 2025, the commercial product Kosmos launched and Edison spun out as the for-profit vehicle. Eric and Wendy Schmidt funded FutureHouse's first two years."
+    },
+    {
+      "id": "k15_positioning",
+      "stream": "edison",
+      "color": "#7C3AED",
+      "kind": "manifesto",
+      "kicker": "EDISON \u00b7 POSITIONING",
+      "title": "\"Building AI-native biopharma organizations.\"",
+      "subtitle": "Not a point app. Not a copilot. Institutional R&D infrastructure that participates directly in scientific workflows, decision-making, and organizational learning. Sells embedded forward-deployed scientists plus software plus custom world models per client.",
+      "narration": "Edison's self-positioning, verbatim. Building AI-native biopharma organizations. They are not selling a point app. They are not selling a copilot. They are selling institutional R&D infrastructure that participates directly in scientific workflows, decision-making, and organizational learning. The sales motion includes embedded forward-deployed scientists alongside the software \u2014 this is a high-touch enterprise sale with custom world models developed on each client's data. The pricing is not publicly disclosed but the pattern fits enterprise SaaS plus services hybrid."
+    },
+    {
+      "id": "k16_compare_intro",
+      "stream": "compare",
+      "color": "#10B981",
+      "kind": "manifesto",
+      "kicker": "HEAD-TO-HEAD",
+      "title": "Where each side leads, structurally.",
+      "subtitle": "Seven dimensions where BiRAGAS retains differentiation Edison has NOT publicly addressed. Seven dimensions where Edison leads today \u2014 all primarily commercial and distributional, not technical.",
+      "narration": "Now to the head-to-head comparison. Seven dimensions where BiRAGAS retains structural differentiation that Edison has not publicly addressed. And seven dimensions where Edison leads today \u2014 but importantly, all of Edison's advantages are commercial and distributional, not technical. None of Edison's advantages are technical moats that BiRAGAS cannot close."
+    },
+    {
+      "id": "k17_overlap",
+      "stream": "compare",
+      "color": "#10B981",
+      "kind": "list",
+      "kicker": "OVERLAP AREAS",
+      "title": "Where both companies play",
+      "bullets": [
+        "End-to-end pharma R&D acceleration (discovery \u2192 clinical)",
+        "Multi-modal data integration (literature + experimental + clinical + biomarker)",
+        "World-model / structured representation of organizational knowledge",
+        "Enterprise / on-prem deployment with audit trails",
+        "Strategic-collaboration sales motion with large pharma",
+        "Model-agnostic LLM provider stack"
+      ],
+      "narration": "The overlap. Both companies target end-to-end pharma R&D acceleration from discovery through clinical. Both integrate multi-modal data \u2014 literature, experimental, clinical, biomarker. Both build structured world-model representations of organizational scientific knowledge. Both support enterprise on-premises deployment with audit trails. Both pursue strategic-collaboration sales motions with large pharma. Both run model-agnostic LLM provider stacks. The buyer overlap is significant \u2014 they're calling on the same heads of R&D, the same CSO offices."
+    },
+    {
+      "id": "k18_biragas_wins_1",
+      "stream": "compare",
+      "color": "#C8102E",
+      "kind": "table",
+      "kicker": "WHERE BIRAGAS WINS \u00b7 DIMENSIONS 1-3",
+      "title": "Causal layer \u00b7 Perturbation evidence \u00b7 Modular surface",
+      "body": "These three are technical-architectural differentiations that Edison's public materials do not address.",
+      "table": {
+        "title": "BiRAGAS Wins \u00b7 Dimensions 1-3",
+        "headers": [
+          "Dimension",
+          "BiRAGAS Position",
+          "Kosmos Position"
+        ],
+        "rows": [
+          [
+            "Causal layer",
+            "4-layer causal framework + CCS + PSI + hallucination shield",
+            "'Auditable workflows' + 'structured world models' \u2014 no causal-confidence metric"
+          ],
+          [
+            "Perturbation evidence",
+            "88.9B CRISPR perturbations + 8.6M Bio-RAG vectors",
+            "No disclosed proprietary perturbation datasets \u2014 client BYO + public corpora"
+          ],
+          [
+            "Modular surface",
+            "4 modalities + 837 modules",
+            "~3 inherited agents publicly named; community repo claims ~116 skills"
+          ]
+        ]
+      },
+      "narration": "Where BiRAGAS wins, dimensions one through three. The causal layer \u2014 BiRAGAS has an explicit four-layer causal framework with Causal Confidence Scoring and PSI and a hallucination shield. Edison talks about auditability and structured world models but has no published causal-confidence metric. The perturbation evidence \u2014 BiRAGAS has eighty-eight point nine billion CRISPR perturbations and eight point six million Bio-RAG vectors as a grounding substrate. Edison has not disclosed proprietary perturbation datasets at this scale \u2014 their data is client bring-your-own plus public corpora. And modular surface \u2014 BiRAGAS has four data modalities and eight hundred thirty-seven modules; Kosmos publicly names three inherited agents."
+    },
+    {
+      "id": "k19_biragas_wins_2",
+      "stream": "compare",
+      "color": "#C8102E",
+      "kind": "table",
+      "kicker": "WHERE BIRAGAS WINS \u00b7 DIMENSIONS 4-7",
+      "title": "Regulatory \u00b7 Revenue diversification \u00b7 IP \u00b7 Outcome-truthfulness",
+      "body": "The dimensions that compound. Regulatory positioning, revenue diversification, IP depth, and outcome-truthfulness framing are not addressable by Edison in 12-18 months.",
+      "table": {
+        "title": "BiRAGAS Wins \u00b7 Dimensions 4-7",
+        "headers": [
+          "Dimension",
+          "BiRAGAS Position",
+          "Kosmos Position"
+        ],
+        "rows": [
+          [
+            "Regulatory positioning",
+            "FDA BQP engagement + 21 CFR \u00a7809.40 CDx + Breakthrough Device",
+            "No disclosed FDA engagement \u2014 pre-regulatory"
+          ],
+          [
+            "Revenue diversification",
+            "5 streams: SaaS + Co-Dev + LDT + Wellness $90K + CDx royalty",
+            "Single stream: enterprise software + services"
+          ],
+          [
+            "IP depth",
+            "18 patent categories (CAT-00..17) + trade-secret + biomarker layers",
+            "Platform IP + 'world models' \u2014 no public patent inventory"
+          ],
+          [
+            "Outcome-truthfulness",
+            "Scores OUTCOME truthfulness \u2014 causal attribution",
+            "Community repo's ScholarEval evaluates discovery-PAPER quality (different layer)"
+          ]
+        ]
+      },
+      "narration": "Where BiRAGAS wins, dimensions four through seven. Regulatory positioning \u2014 BiRAGAS has active FDA Biomarker Qualification Program engagement plus a twenty-one CFR eight oh nine point forty CDx pathway plus Breakthrough Device pursuit. Edison has not disclosed FDA engagement \u2014 they are pre-regulatory. Revenue diversification \u2014 BiRAGAS runs five streams: SaaS, Co-Dev, LDT, Wellness ninety-thousand UHNW, and CDx royalty. Edison is single-stream enterprise software plus services. IP depth \u2014 BiRAGAS holds eighteen patent categories CAT-00 through 17 plus trade-secret and biomarker layers; Edison has not published a patent inventory. And outcome-truthfulness \u2014 BiRAGAS scores treatment-effect causal attribution; Kosmos's quality framework evaluates discovery-paper quality, a different layer."
+    },
+    {
+      "id": "k20_kosmos_wins_1",
+      "stream": "compare",
+      "color": "#3B82F6",
+      "kind": "table",
+      "kicker": "WHERE KOSMOS WINS \u00b7 DIMENSIONS 1-3",
+      "title": "Funding \u00b7 Brand \u00b7 Reference customer",
+      "body": "The first three Kosmos advantages are commercial and distributional. None of them are technical moats. All can be closed by BiRAGAS execution.",
+      "table": {
+        "title": "Kosmos Wins \u00b7 Dimensions 1-3",
+        "headers": [
+          "Dimension",
+          "BiRAGAS Position",
+          "Kosmos Position"
+        ],
+        "rows": [
+          [
+            "Funding & runway",
+            "$20M SAFE PPM (pre-Series A)",
+            "$70M seed at ~$250M post (Dec 2025) \u2014 fresh brand-name VC capital"
+          ],
+          [
+            "Brand & lineage",
+            "Independent \u00b7 early commercial",
+            "Direct FutureHouse lineage (Schmidt-backed, Nature-published Robin)"
+          ],
+          [
+            "Reference customer",
+            "20-named-pharma pipeline \u00b7 no marquee anchor yet",
+            "Incyte (NASDAQ:INCY ~$15B) embedded across discovery \u2192 development"
+          ]
+        ]
+      },
+      "narration": "Where Kosmos wins, dimensions one through three. Funding and runway \u2014 Edison closed seventy million in seed at approximately two hundred fifty million post-money in December 2025 with fresh brand-name VC capital. BiRAGAS is at a much earlier capital stage with the twenty million SAFE PPM. Brand and lineage \u2014 Edison has direct FutureHouse lineage with Schmidt backing and the Nature-published Robin agent giving strong scientific credibility. BiRAGAS is independent and early commercial. Reference customer \u2014 Edison has Incyte, a fifteen billion dollar pharma anchor embedded across discovery through development. BiRAGAS has a twenty-named-pharma pipeline but no comparable disclosed anchor yet."
+    },
+    {
+      "id": "k21_kosmos_wins_2",
+      "stream": "compare",
+      "color": "#3B82F6",
+      "kind": "table",
+      "kicker": "WHERE KOSMOS WINS \u00b7 DIMENSIONS 4-7",
+      "title": "Angels \u00b7 UX \u00b7 Compute \u00b7 Community",
+      "body": "The remaining four Kosmos advantages are also commercial. UX and community are real but not durable moats. Compute orchestration is closeable in a single release cycle.",
+      "table": {
+        "title": "Kosmos Wins \u00b7 Dimensions 4-7",
+        "headers": [
+          "Dimension",
+          "BiRAGAS Position",
+          "Kosmos Position"
+        ],
+        "rows": [
+          [
+            "Angel/board signal",
+            "Pre-Series-A \u00b7 no celebrity angels disclosed",
+            "Jeff Dean (Google CSO) + Dmitri Alperovitch \u2014 talent magnetism"
+          ],
+          [
+            "Real-time UX surface",
+            "No publicly described synchronous collab surface yet",
+            "Slack / Teams / email persistent synchronous interface"
+          ],
+          [
+            "Compute orchestration",
+            "WF-1..7 workflows \u2014 compute provisioning not publicly detailed",
+            "Explicit GPU compute provisioning for AlphaFold + docking"
+          ],
+          [
+            "Community mindshare",
+            "No public OSS repo",
+            "Community Kosmos repo (526 stars) \u2014 though unofficial"
+          ]
+        ]
+      },
+      "narration": "Where Kosmos wins, dimensions four through seven. Angel signal \u2014 Jeff Dean as Google's Chief Scientist and Dmitri Alperovitch as CrowdStrike's co-founder give Edison talent magnetism BiRAGAS does not yet have. Real-time UX \u2014 Edison's Slack, Teams, and email persistent synchronous interface lowers adoption friction inside R&D organizations; BiRAGAS public materials don't yet describe a comparable collaboration surface. Compute orchestration \u2014 Edison explicitly auto-provisions GPU compute for AlphaFold and docking; BiRAGAS's WF-1 through WF-7 workflows are not publicly described as auto-provisioning at that fidelity. Community mindshare \u2014 the community Kosmos repo extends Edison's developer mindshare even though it's unofficial; BiRAGAS has no public OSS repo. None of these four are durable technical moats."
+    },
+    {
+      "id": "k22_partnership",
+      "stream": "compare",
+      "color": "#10B981",
+      "kind": "manifesto",
+      "kicker": "PARTNERSHIP POTENTIAL",
+      "title": "Edison's gap is exactly BiRAGAS's strength.",
+      "subtitle": "A BiRAGAS causal-validation layer underneath Kosmos's orchestration provides Kosmos with the causal-confidence output validation its structured world models currently lack \u2014 plus the CDx and patient-stratification readouts Edison has not built. Conversely, BiRAGAS could license Kosmos literature / analysis / precedent agents as upstream ingestion.",
+      "narration": "Partnership potential. Edison's gap is exactly BiRAGAS's strength. A BiRAGAS causal-validation layer underneath Kosmos's orchestration would provide Kosmos with the causal-confidence output validation that its structured world models currently lack, plus the CDx and patient-stratification readouts Edison has not built. Conversely, BiRAGAS could license Kosmos's literature, analysis, and precedent agents as upstream ingestion infrastructure. The concrete fit: BiRAGAS as the Causal Confidence Score verification engine and perturbation evidence substrate; Kosmos as the orchestration plus literature and data ingestion plus pharma distribution layer."
+    },
+    {
+      "id": "k23_threat_level",
+      "stream": "threat",
+      "color": "#EF4444",
+      "kind": "stat-grid",
+      "kicker": "THREAT ASSESSMENT",
+      "title": "MEDIUM-HIGH today",
+      "body": "Threat is real on the enterprise pharma SaaS layer \u2014 same buyer, marquee anchor, capital advantage, friction-reducing UX. But BiRAGAS's defensible moats are NOT in Edison's public roadmap and are not easily replicable in 12-18 months.",
+      "kpis": [
+        {
+          "k": "MED-HIGH",
+          "v": "Current threat level"
+        },
+        {
+          "k": "Commercial",
+          "v": "Threat type (not technical)"
+        },
+        {
+          "k": "12-18 mo",
+          "v": "Window before threat escalates"
+        },
+        {
+          "k": "4 triggers",
+          "v": "to escalate to HIGH"
+        }
+      ],
+      "narration": "Threat assessment. Medium to high today. The threat is real on the enterprise pharma SaaS layer \u2014 same buyer, marquee Incyte anchor, capital advantage, friction-reducing Slack-Teams UX. But the threat is commercial and distributional, not technical. BiRAGAS's defensible moats \u2014 causal confidence scoring, perturbation evidence, FDA regulatory positioning, diversified revenue stack \u2014 are NOT in Edison's public roadmap and are not easily replicable in twelve to eighteen months."
+    },
+    {
+      "id": "k24_escalation",
+      "stream": "threat",
+      "color": "#EF4444",
+      "kind": "list",
+      "kicker": "ESCALATION TRIGGERS \u00b7 WATCH-LIST",
+      "title": "Events that would escalate threat from MED-HIGH to HIGH",
+      "body": "Quarterly tracking. If any of these announce, BiRAGAS's primary differentiation begins to close.",
+      "bullets": [
+        "Any causal-confidence / CCS-equivalent module announcement from Edison",
+        "Any FDA submission by Edison (Breakthrough Device, BQP, 510(k), De Novo, PMA)",
+        "Any LDT or CDx revenue stream launched by Edison",
+        "Any second-anchor pharma deployment beyond Incyte",
+        "Any disclosed proprietary perturbation dataset at scale (>1B perturbations)",
+        "Any Series A announcement with strategic pharma corporate participation",
+        "Any patent filing in causal inference / perturbation modeling"
+      ],
+      "narration": "Escalation triggers. Watch-list. Track Edison announcements quarterly. Events that would escalate threat from MED-HIGH to HIGH: any causal-confidence or CCS-equivalent module announcement \u2014 that closes BiRAGAS's primary differentiation. Any FDA submission, whether Breakthrough Device, Biomarker Qualification, 510(k), De Novo, or PMA. Any LDT or CDx revenue stream launched by Edison. Any second-anchor pharma deployment beyond Incyte. Any disclosed proprietary perturbation dataset at scale, meaning over one billion perturbations. Any Series A announcement with strategic pharma corporate participation. And any patent filing in causal inference or perturbation modeling."
+    },
+    {
+      "id": "k25_posture_1",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "manifesto",
+      "kicker": "POSTURE 1 OF 4",
+      "title": "Anchor on causal infrastructure where Edison is silent.",
+      "subtitle": "BiRAGAS's defensible moats are CCS scoring of outcome truthfulness, perturbation-grounded evidence at 88.9 billion CRISPR scale, FDA BQP / CDx regulatory rails, and the 5-stream revenue diversification. None appear in Edison's public roadmap. Foreground them in every investor conversation.",
+      "narration": "Posture one of four. Anchor on causal infrastructure where Edison is silent. BiRAGAS's defensible moats are Causal Confidence Scoring of outcome truthfulness, perturbation-grounded evidence at the eighty-eight point nine billion CRISPR scale, FDA Biomarker Qualification Program and CDx regulatory rails, and the five-stream revenue diversification. None of these appear in Edison's public roadmap. The BiRAGAS investor narrative should foreground these wedges every time the conversation crosses with the Edison narrative."
+    },
+    {
+      "id": "k26_posture_2",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "manifesto",
+      "kicker": "POSTURE 2 OF 4",
+      "title": "Do NOT try to out-execute Edison on the generic R&D copilot motion.",
+      "subtitle": "Edison has $70M of fresh capital, a marquee Incyte anchor, and a Slack/Teams synchronous UX that resonates with R&D directors. Competing head-to-head on enterprise pharma copilot SaaS would be a capital-disadvantaged battle BiRAGAS doesn't need to fight.",
+      "narration": "Posture two of four. Do not try to out-execute Edison on the generic R and D copilot motion. Edison has seventy million dollars of fresh capital, a marquee Incyte anchor, and a Slack and Teams synchronous UX that resonates with R and D directors. Competing head-to-head on enterprise pharma copilot SaaS would be a capital-disadvantaged battle BiRAGAS doesn't need to fight. The energy spent there is energy not spent on the causal-infrastructure wedge where BiRAGAS leads structurally."
+    },
+    {
+      "id": "k27_posture_3",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "manifesto",
+      "kicker": "POSTURE 3 OF 4",
+      "title": "Reframe Edison as a complementary orchestration peer.",
+      "subtitle": "In any conversation that compares BiRAGAS and Edison, position Edison as the orchestration / agent-runtime layer and BiRAGAS as the causal-validation + outcome-truthfulness layer that runs underneath. Technically defensible. Commercially constructive.",
+      "narration": "Posture three of four. Reframe Edison as a complementary orchestration peer, not a head-to-head replacement. In any conversation that compares BiRAGAS and Edison, position Edison as the orchestration and agent-runtime layer, and BiRAGAS as the causal-validation and outcome-truthfulness layer that runs underneath. This framing is technically defensible \u2014 the layers genuinely do solve different problems. It's commercially constructive \u2014 it opens partnership conversations rather than closes them. And it's narratively cleaner for investors trying to evaluate two adjacent companies in the same week."
+    },
+    {
+      "id": "k28_posture_4",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "manifesto",
+      "kicker": "POSTURE 4 OF 4",
+      "title": "Build the watch-list. Track Edison quarterly.",
+      "subtitle": "The 7 escalation triggers in the previous slide are the watch-list. Any one of them announces, threat escalates to HIGH. BiRAGAS leadership should have a standing quarterly review of Edison disclosures with explicit decision criteria for accelerating defensive build.",
+      "narration": "Posture four of four. Build the watch-list. Track Edison quarterly. The seven escalation triggers in the previous slide are the watch-list. Any one of them announces \u2014 and threat escalates from MED-HIGH to HIGH. BiRAGAS leadership should have a standing quarterly review of Edison disclosures with explicit decision criteria for accelerating defensive build versus opening a partnership conversation. The worst outcome is being surprised. The next-worst outcome is reacting late."
+    },
+    {
+      "id": "k29_outreach",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "stat-grid",
+      "kicker": "ACTION \u00b7 OUTREACH",
+      "title": "Draft outreach to Rodriques and White exploring partnership",
+      "body": "Specific ask: 15-minute introductory call to explore complementary architecture. BiRAGAS's CCS layer underneath Kosmos's orchestration. Posture: complementary not competitive. Tone: warm, technical, founder-to-founder.",
+      "kpis": [
+        {
+          "k": "Sam Rodriques",
+          "v": "CEO \u00b7 co-founder (MIT, Crick)"
+        },
+        {
+          "k": "Andrew White",
+          "v": "CTO \u00b7 co-founder (Rochester, ChemCrow)"
+        },
+        {
+          "k": "15 min intro",
+          "v": "the ask"
+        },
+        {
+          "k": "Complementary",
+          "v": "posture \u00b7 not competitive"
+        }
+      ],
+      "narration": "Action item. Draft outreach to Sam Rodriques and Andrew White exploring partnership, not positioning as competition. Specific ask \u2014 fifteen minute introductory call to explore complementary architecture. The hook \u2014 BiRAGAS's Causal Confidence Score layer underneath Kosmos's orchestration would supply the causal-validation Edison's structured world models currently don't include. Posture \u2014 complementary, not competitive. Tone \u2014 warm, technical, founder to founder. The outreach letter draft is included in the kosmos folder companion materials."
+    },
+    {
+      "id": "k30_close",
+      "stream": "close",
+      "color": "#1E40AF",
+      "kind": "cover",
+      "kicker": "MEMO ENDS \u00b7 MMXXVI",
+      "title": "Edison is real. The wedge is intact.",
+      "subtitle": "BiRAGAS's structural differentiation \u2014 causal-confidence + perturbation evidence + FDA regulatory + 5-stream diversification \u2014 is NOT in Edison's public roadmap. Anchor there. Watch quarterly. Open partnership conversation rather than competitive posture.",
+      "big_number": "MED-HIGH",
+      "big_label": "threat level \u00b7 escalates to HIGH on any of 7 triggers \u00b7 refresh quarterly",
+      "narration": "Edison is real. The wedge is intact. BiRAGAS's structural differentiation \u2014 causal confidence scoring, perturbation evidence, FDA regulatory positioning, and the five-stream revenue diversification \u2014 is not in Edison's public roadmap. Anchor on those wedges. Watch Edison's disclosures quarterly. Open a partnership conversation rather than adopt a purely competitive posture. The analysis ends here. The action items begin now."
+    }
+  ]
+}</script>
+<script>
+(function() {
+  const el = document.getElementById("deck-data");
+  if (el) { try { window.__DECK_DATA__ = JSON.parse(el.textContent); } catch(e) { console.error(e); } }
+})();
+</script>
+</body>
+</html>
